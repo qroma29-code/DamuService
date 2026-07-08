@@ -1,0 +1,28 @@
+datasource db {
+    provider = "postgresql"
+    url = env("DATABASE_URL")
+}
+
+generator client {
+    provider = "prisma-client-js"
+}
+
+model Client {
+    id Int @id @default(autoincrement())
+    name String // ФИО клиента
+    phone String @unique
+    orders Order[]
+    createdAt DateTime @default(now())
+}
+
+model Order {
+    id Int @id @default(autoincrement())
+    device String // Уситройство (напр. Iphone 13)
+    description String // Описание поломки
+    status String @default("new") // NEW, IN_PROGRESS, READY, ARCHIVED
+    price Float @default(0.0)
+    clientId Int
+    client Client @relation(fields: [clientId], referens: [id])
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+}
